@@ -1,11 +1,6 @@
-import { GetStaticProps, InferGetStaticPropsType } from 'next'
 import Head from 'next/head'
 
-type name = {
-  name: string
-}
-
-export default function Home({ name }: InferGetStaticPropsType<typeof getStaticProps>) {
+export default function Home() {
   return (
     <div>
       <Head>
@@ -21,19 +16,9 @@ export default function Home({ name }: InferGetStaticPropsType<typeof getStaticP
       </Head>
       <main>
         <div className="mx-auto container">
-          <h1 className="text-4xl text-center py-24">Hello, {name}!</h1>
+          <h1 className="text-4xl text-center py-24">Hello</h1>
         </div>
       </main>
     </div>
   )
-}
-
-export const getStaticProps: GetStaticProps<name> = async () => {
-  const res = await fetch('http://localhost:3000/api/hello')
-  const { name } = await res.json()
-  return {
-    props: {
-      name,
-    },
-  }
 }
