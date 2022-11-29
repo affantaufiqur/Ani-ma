@@ -62,7 +62,7 @@ export default function Home({ anime }: InferGetServerSidePropsType<typeof getSe
 
 export const getServerSideProps: GetServerSideProps<{ anime: getAnimeSeasonNowTypes }> = async () => {
   const req = await fetch('https://api.jikan.moe/v4/seasons/now')
-  const getAnimeSeasonNow = await req.json()
+  const getAnimeSeasonNow: getAnimeSeasonNowTypes = await req.json()
   return {
     props: {
       anime: getAnimeSeasonNow,
