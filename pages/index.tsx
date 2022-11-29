@@ -1,8 +1,10 @@
+import { GetServerSideProps, InferGetServerSidePropsType } from 'next'
 import Head from 'next/head'
 import Image from 'next/image'
 import Link from 'next/link'
+import type { getAnimeSeasonNowTypes } from '../types/anime.types'
 
-export default function Home({ anime }: any) {
+export default function Home({ anime }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   return (
     <div>
       <Head>
@@ -30,7 +32,7 @@ export default function Home({ anime }: any) {
             </Link>
           </section>
           <div className="flex gap-5 flex-row overflow-x-scroll font-general-sans snap-x pb-10 sm:pb-1 sm:mx-0 no-scrollbar">
-            {anime.data.map((item: any) => {
+            {anime.data.map((item) => {
               return (
                 <Link
                   href={`/anime/${encodeURIComponent(item.mal_id)}`}
@@ -58,7 +60,7 @@ export default function Home({ anime }: any) {
   )
 }
 
-export async function getServerSideProps() {
+export const getServerSideProps: GetServerSideProps<{ anime: getAnimeSeasonNowTypes }> = async () => {
   const req = await fetch('https://api.jikan.moe/v4/seasons/now')
   const getAnimeSeasonNow = await req.json()
   return {
