@@ -1,8 +1,9 @@
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next'
 import Head from 'next/head'
-import Image from 'next/image'
 import Link from 'next/link'
 import type { getAnimeSeasonNowTypes } from '../types/anime.types'
+import { getAnimeSeasonNowUrl } from '../constant/animeUrl.constant'
+import Card from '../components/Card/Card.component'
 
 export default function Home({ anime }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   return (
@@ -34,23 +35,10 @@ export default function Home({ anime }: InferGetServerSidePropsType<typeof getSe
           <div className="flex gap-5 flex-row overflow-x-scroll font-general-sans snap-x pb-10 sm:pb-1 sm:mx-0 no-scrollbar">
             {anime.data.map((item) => {
               return (
-                <Link
-                  href={`/anime/${encodeURIComponent(item.mal_id)}`}
-                  className="flex flex-col gap-y-3 basis-48 shrink-0 group cursor-pointer"
+                <Card
+                  item={item}
                   key={item.mal_id}
-                >
-                  <Image
-                    src={item.images.webp.image_url}
-                    alt={item.title}
-                    width={192}
-                    height={256}
-                    className="h-64 w-auto snap-start hover:brightness-75 transition-all duration-100"
-                    priority
-                  />
-                  <p className="text-black-shaft-200 font-medium group-hover:text-port-gore-700 transition-all duration-100 text-sm tracking-wider leading-tight group-hover:block break-words">
-                    {item.title}
-                  </p>
-                </Link>
+                />
               )
             })}
           </div>
@@ -61,7 +49,7 @@ export default function Home({ anime }: InferGetServerSidePropsType<typeof getSe
 }
 
 export const getServerSideProps: GetServerSideProps<{ anime: getAnimeSeasonNowTypes }> = async () => {
-  const req = await fetch('https://api.jikan.moe/v4/seasons/now')
+  const req = await fetch(getAnimeSeasonNowUrl)
   const getAnimeSeasonNow: getAnimeSeasonNowTypes = await req.json()
   return {
     props: {
