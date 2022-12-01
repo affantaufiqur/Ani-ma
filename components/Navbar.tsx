@@ -35,7 +35,7 @@ export default function Navbar({ children }: childrenProps) {
                 key={link.pathname}
                 className={
                   router.pathname === link.pathname
-                    ? 'text-port-gore-400 font-semibold hover:text-white'
+                    ? 'text-port-gore-400 font-semibold'
                     : 'hover:text-port-gore-300 transition-all duration-150 text-black-shaft-300'
                 }
               >
