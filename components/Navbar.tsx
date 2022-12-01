@@ -13,11 +13,11 @@ type linkType = {
 
 export default function Navbar({ children }: childrenProps) {
   const router = useRouter()
-  console.log(router)
   const links: linkType[] = [
     { href: 'anime', pathname: '/anime' },
     { href: 'manga', pathname: '/manga' },
   ]
+
   return (
     <main>
       <header className="bg-black-shaft-900">
@@ -29,10 +29,10 @@ export default function Navbar({ children }: childrenProps) {
             Ani-ma
           </Link>
           <section className="flex flex-row gap-x-5 font-general-sans tracking-wide">
-            {links.map((link, index) => (
+            {links.map((link) => (
               <Link
                 href={link.href}
-                key={index}
+                key={link.pathname}
                 className={
                   router.pathname === link.pathname
                     ? 'text-port-gore-400 font-semibold hover:text-white'

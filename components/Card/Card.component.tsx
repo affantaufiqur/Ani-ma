@@ -1,6 +1,6 @@
 import Image from 'next/image'
 import Link from 'next/link'
-import type { AnimeDataType, getAnimeSeasonNowTypes } from '../../types/anime.types'
+import type { AnimeDataType } from '../../types/anime.types'
 
 type itemType = {
   item: AnimeDataType
