@@ -1,6 +1,5 @@
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next'
 import Head from 'next/head'
-import Link from 'next/link'
 import type { AnimeArrayDataType } from '../types/anime.types'
 import { getAnimeSeasonNowUrl, topAiringAnimeTv } from '../constant/animeUrl.constant'
 import Card from '../components/Card/Card.component'
