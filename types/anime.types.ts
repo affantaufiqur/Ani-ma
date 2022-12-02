@@ -1,4 +1,4 @@
-export type getAnimeSeasonNowTypes = {
+export type AnimeArrayDataType = {
   'data': AnimeDataType[]
   'pagination': {
     'last_visible_page': number
