@@ -27,9 +27,9 @@ export default function Home({ anime }: InferGetServerSidePropsType<typeof getSe
             </h1>
             <Link
               href={`/anime/season/${encodeURIComponent(anime.data[0].season)}`}
-              className="text-sm text-port-gore-600 font-semibold hover:text-port-gore-500 transition-all duration-200"
+              className="text-[0.75rem] tracking-wide text-port-gore-600 font-semibold hover:text-port-gore-500 transition-all duration-200"
             >
-              View more
+              VIEW MORE
             </Link>
           </section>
           <div className="flex gap-5 flex-row overflow-x-scroll font-general-sans snap-x pb-10 sm:pb-1 sm:mx-0 no-scrollbar">
