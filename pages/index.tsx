@@ -1,11 +1,17 @@
-import { GetServerSideProps, InferGetServerSidePropsType } from 'next'
+import { GetServerSideProps } from 'next'
 import Head from 'next/head'
-import type { AnimeArrayDataType } from '../types/anime.types'
-import { getAnimeSeasonNowUrl, topAiringAnimeTv } from '../constant/animeUrl.constant'
 import Card from '../components/Card/Card.component'
 import CardHomeListHeaderText from '../components/Card/Card-home-list-header.component'
+import { QueryClient, dehydrate, useQuery } from '@tanstack/react-query'
+import { getTopAiringAnime, getAnimeFromSeason } from '../utils/getAnime.utils'
 
-export default function Home({ anime, topAiringAnime }: InferGetServerSidePropsType<typeof getServerSideProps>) {
+export default function Home() {
+  const { data: SeasonalAnimeData } = useQuery({
+    queryKey: ['fetch anime season'],
+    queryFn: getAnimeFromSeason,
+  })
+
+  const { data: TopAiringAnimeData } = useQuery({ queryKey: ['fetch top airing anime'], queryFn: getTopAiringAnime })
   return (
     <div>
       <Head>
@@ -23,10 +29,10 @@ export default function Home({ anime, topAiringAnime }: InferGetServerSidePropsT
         <div className="sm:mx-auto mx-4 sm:container">
           <CardHomeListHeaderText
             title="Fall 2022 Anime"
-            href={`/anime/season/${encodeURIComponent(anime.data[0].season)}`}
+            href={`/anime/season/${encodeURIComponent(`${SeasonalAnimeData?.data[0].season}`)}`}
           />
           <div className="flex gap-5 flex-row overflow-x-scroll font-general-sans snap-x pb-10 sm:pb-1 sm:mx-0 no-scrollbar">
-            {anime.data.map((item) => {
+            {SeasonalAnimeData?.data.map((item) => {
               return (
                 <Card
                   item={item}
@@ -40,7 +46,7 @@ export default function Home({ anime, topAiringAnime }: InferGetServerSidePropsT
             href="/anime/top-airing"
           />
           <div className="flex gap-5 flex-row overflow-x-scroll font-general-sans snap-x pb-10 sm:pb-1 sm:mx-0 no-scrollbar">
-            {topAiringAnime.data.map((item) => {
+            {TopAiringAnimeData?.data.map((item) => {
               return (
                 <Card
                   item={item}
@@ -55,20 +61,15 @@ export default function Home({ anime, topAiringAnime }: InferGetServerSidePropsT
   )
 }
 
-export const getServerSideProps: GetServerSideProps<{
-  anime: AnimeArrayDataType
-  topAiringAnime: AnimeArrayDataType
-}> = async () => {
-  const req = await fetch(getAnimeSeasonNowUrl)
-  const getTopAiringAnimeReq = await fetch(topAiringAnimeTv)
+export const getServerSideProps: GetServerSideProps = async () => {
+  const queryClient = new QueryClient()
 
-  const getTopAiringAnimeData: AnimeArrayDataType = await getTopAiringAnimeReq.json()
-  const getAnimeSeasonNow: AnimeArrayDataType = await req.json()
+  await queryClient.prefetchQuery(['fetch anime season'], getAnimeFromSeason)
+  await queryClient.prefetchQuery(['fetch top airing anime'], getTopAiringAnime)
 
   return {
     props: {
-      anime: getAnimeSeasonNow,
-      topAiringAnime: getTopAiringAnimeData,
+      dehydratedState: dehydrate(queryClient),
     },
   }
 }
