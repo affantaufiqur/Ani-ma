@@ -1,16 +1,17 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import type { AnimeDataType } from '../../types/anime.types'
+import type { MangaDataType } from '../../types/manga.types'
 
 type itemType = {
-  item: AnimeDataType
+  item: AnimeDataType | MangaDataType
 }
 
 export default function Card({ item }: itemType) {
   return (
     <Link
       href={`/anime/${encodeURIComponent(item.mal_id)}`}
-      className="flex flex-col gap-y-3 basis-48 shrink-0 group cursor-pointer"
+      className="group flex shrink-0 basis-48 cursor-pointer flex-col gap-y-3"
       key={item.mal_id}
     >
       <Image
@@ -18,10 +19,10 @@ export default function Card({ item }: itemType) {
         alt={item.title}
         width={192}
         height={256}
-        className="h-64 w-auto snap-start hover:brightness-75 transition-all duration-100"
+        className="h-64 w-auto snap-start transition-all duration-100 hover:brightness-75"
         priority
       />
-      <p className="text-black-shaft-200 font-medium group-hover:text-port-gore-700 transition-all duration-100 text-sm tracking-wider leading-tight group-hover:block break-words">
+      <p className="break-words text-sm font-medium leading-tight tracking-wider text-black-shaft-200 transition-all duration-100 group-hover:block group-hover:text-port-gore-700">
         {item.titles[0].title}
       </p>
     </Link>
