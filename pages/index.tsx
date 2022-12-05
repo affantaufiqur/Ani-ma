@@ -8,7 +8,7 @@ import { getTopPusblishingManga } from '../utils/getManga.utils'
 import LoadingIndicator from '../components/LoadingIndicator.component'
 
 export default function Home() {
-  const { data: SeasonalAnimeData, isFetching: isSeasonalAnimeDataFetching } = useQuery({
+  const { data: SeasonalAnimeData } = useQuery({
     queryKey: ['fetch anime season'],
     queryFn: getAnimeFromSeason,
   })
