@@ -8,6 +8,13 @@ type itemType = {
 }
 
 export default function Card({ item }: itemType) {
+  function truncateTitle(title: string, limit = 45) {
+    if (title.length <= limit) {
+      return title
+    }
+    return `${title.slice(0, limit)}...`
+  }
+
   return (
     <Link
       href={`/${item?.genres[0]?.type}/${encodeURIComponent(item?.mal_id)}`}
@@ -23,7 +30,7 @@ export default function Card({ item }: itemType) {
         priority
       />
       <p className="break-words text-sm font-medium leading-tight tracking-wider text-black-shaft-200 transition-all duration-100 group-hover:block group-hover:text-port-gore-700">
-        {item.titles[0].title.substring(0, 40)}
+        {truncateTitle(item?.titles[0]?.title)}
       </p>
     </Link>
   )
