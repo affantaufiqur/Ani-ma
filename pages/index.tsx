@@ -11,11 +11,13 @@ export default function Home() {
   const { data: SeasonalAnimeData } = useQuery({
     queryKey: ['fetch anime season'],
     queryFn: getAnimeFromSeason,
+    staleTime: 300000, // 5 minutes
   })
 
   const { data: TopAiringAnimeData, isFetching: isTopAiringAnimeDataFetching } = useQuery({
     queryKey: ['fetch top airing anime'],
     queryFn: getTopAiringAnime,
+    staleTime: 300000, // 5 minutes
   })
   const { data: TopPublishMangaData, isFetching: isMangaDataFetching } = useQuery({
     queryKey: ['fetch top publishing manga'],
