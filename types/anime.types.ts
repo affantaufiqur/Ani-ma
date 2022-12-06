@@ -80,7 +80,7 @@ export type AnimeDataType = {
     'day': string | null
     'time': string | null
     'timezone': string | null
-    'string': string | null
+    string: string | null
   }
   'producers': [
     {
@@ -142,159 +142,165 @@ export type AnimeDataType = {
 
 export type AnimeByFullIdType = {
   'data': {
-    'mal_id': 0
-    'url': 'string'
+    'mal_id': number
+    'url': string
     'images': {
       'jpg': {
-        'image_url': 'string'
-        'small_image_url': 'string'
-        'large_image_url': 'string'
+        'image_url': string | null
+        'small_image_url': string | null
+        'large_image_url': string | null
       }
       'webp': {
-        'image_url': 'string'
-        'small_image_url': 'string'
-        'large_image_url': 'string'
+        'image_url': string | null
+        'small_image_url': string | null
+        'large_image_url': string | null
       }
     }
     'trailer': {
-      'youtube_id': 'string'
-      'url': 'string'
-      'embed_url': 'string'
+      'youtube_id': string | null
+      'url': string | null
+      'embed_url': string | null
     }
-    'approved': true
+    'approved': boolean
     'titles': [
       {
-        'type': 'string'
-        'title': 'string'
+        'type': string
+        'title': string
       },
     ]
-    'title': 'string'
-    'title_english': 'string'
-    'title_japanese': 'string'
-    'title_synonyms': ['string']
-    'type': 'TV'
-    'source': 'string'
-    'episodes': 0
-    'status': 'Finished Airing'
-    'airing': true
+    'title': string
+    'title_english': string
+    'title_japanese': string
+    'title_synonyms': [string]
+    'type': 'TV' | 'OVA' | 'Movie' | 'Special' | 'ONA' | 'Music' | undefined
+    'source': string | null
+    'episodes': number | null
+    'status': 'Finished Airing' | 'Currently Airing' | 'Not yet aired' | undefined
+    'airing': boolean
     'aired': {
-      'from': 'string'
-      'to': 'string'
+      'from': string | null
+      'to': string | null
       'prop': {
         'from': {
-          'day': 0
-          'month': 0
-          'year': 0
+          'day': number | null
+          'month': number | null
+          'year': number | null
         }
         'to': {
-          'day': 0
-          'month': 0
-          'year': 0
+          'day': number | null
+          'month': number | null
+          'year': number | null
         }
-        'string': 'string'
+        'string': string
       }
     }
-    'duration': 'string'
-    'rating': 'G - All Ages'
-    'score': 0
-    'scored_by': 0
-    'rank': 0
-    'popularity': 0
-    'members': 0
-    'favorites': 0
-    'synopsis': 'string'
-    'background': 'string'
-    'season': 'summer'
-    'year': 0
+    'duration': string
+    'rating':
+      | 'G - All Ages'
+      | 'PG - Children'
+      | 'PG-13 - Teens 13 or older'
+      | 'R - 17+ (violence & profanity)'
+      | 'R+ - Mild Nudity'
+      | 'Rx - Hentai'
+    'score': number | null
+    'scored_by': number | null
+    'rank': number | null
+    'popularity': number | null
+    'members': number | null
+    'favorites': number | null
+    'synopsis': string | null
+    'background': string | null
+    'season': 'summer' | 'winter' | 'spring' | 'fall' | undefined
+    'year': number | null
     'broadcast': {
-      'day': 'string'
-      'time': 'string'
-      'timezone': 'string'
-      'string': 'string'
+      'day': string | null
+      'time': string | null
+      'timezone': string | null
+      'string': string | null
     }
     'producers': [
       {
-        'mal_id': 0
-        'type': 'string'
-        'name': 'string'
-        'url': 'string'
+        'mal_id': number
+        'type': string
+        'name': string
+        'url': string
       },
     ]
     'licensors': [
       {
-        'mal_id': 0
-        'type': 'string'
-        'name': 'string'
-        'url': 'string'
+        'mal_id': number
+        'type': string
+        'name': string
+        'url': string
       },
     ]
     'studios': [
       {
-        'mal_id': 0
-        'type': 'string'
-        'name': 'string'
-        'url': 'string'
+        'mal_id': number
+        'type': string
+        'name': string
+        'url': string
       },
     ]
     'genres': [
       {
-        'mal_id': 0
-        'type': 'string'
-        'name': 'string'
-        'url': 'string'
+        'mal_id': number
+        'type': string
+        'name': string
+        'url': string
       },
     ]
     'explicit_genres': [
       {
-        'mal_id': 0
-        'type': 'string'
-        'name': 'string'
-        'url': 'string'
+        'mal_id': number
+        'type': string
+        'name': string
+        'url': string
       },
     ]
     'themes': [
       {
-        'mal_id': 0
-        'type': 'string'
-        'name': 'string'
-        'url': 'string'
+        'mal_id': number
+        'type': string
+        'name': string
+        'url': string
       },
     ]
     'demographics': [
       {
-        'mal_id': 0
-        'type': 'string'
-        'name': 'string'
-        'url': 'string'
+        'mal_id': number
+        'type': string
+        'name': string
+        'url': string
       },
     ]
     'relations': [
       {
-        'relation': 'string'
+        'relation': string
         'entry': [
           {
-            'mal_id': 0
-            'type': 'string'
-            'name': 'string'
-            'url': 'string'
+            'mal_id': number
+            'type': string
+            'name': string
+            'url': string
           },
         ]
       },
     ]
     'theme': {
-      'openings': ['string']
-      'endings': ['string']
+      'openings': string[]
+      'endings': string[]
     }
     'external': [
       {
-        'name': 'string'
-        'url': 'string'
+        'name': string
+        'url': string
       },
     ]
     'streaming': [
       {
-        'name': 'string'
-        'url': 'string'
+        'name': string
+        'url': string
       },
     ]
   }
