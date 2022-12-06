@@ -1,5 +1,5 @@
-import { getAnimeSeasonNowUrl, topAiringAnimeTv } from '../constant/animeUrl.constant'
-import { AnimeArrayDataType } from '../types/anime.types'
+import { getAnimeByFullId, getAnimeSeasonNowUrl, topAiringAnimeTv } from '../constant/animeUrl.constant'
+import { AnimeArrayDataType, AnimeByFullIdType } from '../types/anime.types'
 
 export const getAnimeFromSeason = async (): Promise<AnimeArrayDataType> => {
   const getAnimeFromSeasonReq = await fetch(getAnimeSeasonNowUrl)
@@ -9,4 +9,9 @@ export const getAnimeFromSeason = async (): Promise<AnimeArrayDataType> => {
 export const getTopAiringAnime = async (): Promise<AnimeArrayDataType> => {
   const getTopAiringAnimeReq = await fetch(topAiringAnimeTv)
   return await getTopAiringAnimeReq.json()
+}
+
+export const getAnimeById = async (id: string): Promise<AnimeByFullIdType> => {
+  const getAnimeInfoReq = await fetch(getAnimeByFullId(id))
+  return await getAnimeInfoReq.json()
 }
