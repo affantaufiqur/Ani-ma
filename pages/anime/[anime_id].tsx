@@ -11,7 +11,6 @@ export default function AnimePage({ params }: InferGetServerSidePropsType<typeof
   const { data, status, error } = useQuery<AnimeByFullIdType, Error>({
     queryKey: ['fetch anime data'],
     queryFn: () => getAnimeById(anime_id as string),
-    staleTime: 300000, // 5 minutes
   })
 
   if (status === 'loading') {
