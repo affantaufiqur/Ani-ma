@@ -34,7 +34,7 @@ export default function AnimePage({ params }: InferGetServerSidePropsType<typeof
       <div className="container mx-auto font-general-sans">
         <section className="flex flex-row gap-5">
           <Image
-            src={data?.data?.images.webp.large_image_url}
+            src={data?.data?.images.webp.large_image_url as string}
             alt={data?.data?.title}
             width={240}
             height={340}
