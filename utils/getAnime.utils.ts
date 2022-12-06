@@ -11,7 +11,7 @@ export const getTopAiringAnime = async (): Promise<AnimeArrayDataType> => {
   return await getTopAiringAnimeReq.json()
 }
 
-export const getAnimeById = async (id: string | undefined): Promise<AnimeByFullIdType> => {
+export const getAnimeById = async (id: string): Promise<AnimeByFullIdType> => {
   const getAnimeInfoReq = await fetch(getAnimeByFullId(id))
   return await getAnimeInfoReq.json()
 }

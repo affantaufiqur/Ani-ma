@@ -1,4 +1,3 @@
-import { getAnimeByFullId } from '../constant/animeUrl.constant'
 export type AnimeArrayDataType = {
   'data': AnimeDataType[]
   'pagination': {

@@ -3,11 +3,12 @@ import type { GetServerSideProps, GetServerSidePropsContext, InferGetServerSideP
 import Image from 'next/image'
 import { ParsedUrlQuery } from 'querystring'
 import LoadingIndicator from '../../components/LoadingIndicator.component'
+import { AnimeByFullIdType } from '../../types/anime.types'
 import { getAnimeById } from '../../utils/getAnime.utils'
 
 export default function AnimePage({ params }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const { anime_id } = params
-  const { data, status, error } = useQuery({
+  const { data, status, error } = useQuery<AnimeByFullIdType, Error>({
     queryKey: ['fetch anime data'],
     queryFn: () => getAnimeById(anime_id as string),
     staleTime: 300000, // 5 minutes
@@ -22,8 +23,11 @@ export default function AnimePage({ params }: InferGetServerSidePropsType<typeof
   }
 
   if (status === 'error') {
-    // @ts-ignore
-    return <p>error: {error.message}</p>
+    return (
+      <div className="flex h-screen items-center justify-center bg-black-shaft-900">
+        <p className="text-white">Error: {error.message}</p>
+      </div>
+    )
   }
 
   return (
