@@ -8,11 +8,11 @@ type itemType = {
 }
 
 export default function Card({ item }: itemType) {
-  function truncateTitle(title: string, limit: number = 45) {
+  function truncateTitle(title: string, limit = 45) {
     if (title.length <= limit) {
       return title
     }
-    return title.slice(0, limit) + '...'
+    return `${title.slice(0, limit)}...`
   }
 
   return (
