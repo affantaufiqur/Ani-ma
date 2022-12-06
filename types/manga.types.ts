@@ -36,7 +36,7 @@ export type MangaDataType = {
   'title': string
   'title_english': string
   'title_japanese': string
-  'type': 'Manga'
+  'type': string | null
   'chapters': number | null
   'volumes': number | null
   'status': 'Finished'

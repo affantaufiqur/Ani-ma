@@ -27,9 +27,9 @@ export type AnimeDataType = {
     }
   }
   'trailer': {
-    'youtube_id': string
-    'url': string
-    'embed_url': string
+    'youtube_id': string | null
+    'url': string | null
+    'embed_url': string | null
   }
   'approved': true
   'titles': [
@@ -42,13 +42,13 @@ export type AnimeDataType = {
   'title_english': string
   'title_japanese': string
   'title_synonyms': [string]
-  'type': 'TV'
-  'source': string
-  'episodes': number
-  'status': string
+  'type': string | null
+  'source': string | null
+  'episodes': number | null
+  'status': string | null
   'airing': boolean
   'aired': {
-    'from': string
+    'from': string | null
     'to': string
     'prop': {
       'from': {
@@ -64,23 +64,23 @@ export type AnimeDataType = {
       string: string
     }
   }
-  'duration': string
-  'rating': string
-  'score': number
-  'scored_by': number
-  'rank': number
-  'popularity': number
-  'members': number
-  'favorites': number
-  'synopsis': string
-  'background': string
-  'season': string
-  'year': number
+  'duration': string | null
+  'rating': string | null
+  'score': number | null
+  'scored_by': number | null
+  'rank': number | null
+  'popularity': number | null
+  'members': number | null
+  'favorites': number | null
+  'synopsis': string | null
+  'background': string | null
+  'season': string | null
+  'year': number | null
   'broadcast': {
-    'day': string
-    'time': string
-    'timezone': string
-    string: string
+    'day': string | null
+    'time': string | null
+    'timezone': string | null
+    'string': string | null
   }
   'producers': [
     {
