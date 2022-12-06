@@ -9,22 +9,23 @@ type childrenProps = {
 type linkType = {
   href: string
   pathname?: string
+  showName: string
 }
 
 export default function Navbar({ children }: childrenProps) {
   const router = useRouter()
   const links: linkType[] = [
-    { href: 'anime', pathname: '/anime' },
-    { href: 'manga', pathname: '/manga' },
+    { href: '/anime', pathname: '/anime', showName: 'anime' },
+    { href: '/manga', pathname: '/manga', showName: 'manga' },
   ]
 
   return (
     <main>
       <header className="bg-black-shaft-900">
-        <section className="mx-auto container text-white py-8 flex flex-row justify-between items-center">
+        <section className="container mx-auto flex flex-row items-center justify-between py-8 text-white">
           <Link
             href="/"
-            className="font-chillax text-2xl tracking-wide font-semibold text-transparent bg-clip-text bg-gradient-to-r from-port-gore-400 via-port-gore-400 to-port-gore-800 hover:cursor-pointer hover:to-port-gore-900 hover:from-port-gore-500 hover:via-port-gore-600 duration-100 transition-all"
+            className="bg-gradient-to-r from-port-gore-400 via-port-gore-400 to-port-gore-800 bg-clip-text font-chillax text-2xl font-semibold tracking-wide text-transparent transition-all duration-100 hover:cursor-pointer hover:from-port-gore-500 hover:via-port-gore-600 hover:to-port-gore-900"
           >
             Ani-ma
           </Link>
@@ -35,11 +36,11 @@ export default function Navbar({ children }: childrenProps) {
                 key={link.pathname}
                 className={
                   router.pathname === link.pathname
-                    ? 'text-port-gore-400 font-semibold'
-                    : 'hover:text-port-gore-300 transition-all duration-150 text-black-shaft-300'
+                    ? 'font-semibold text-port-gore-400'
+                    : 'text-black-shaft-300 transition-all duration-150 hover:text-port-gore-300'
                 }
               >
-                {link.href}
+                {link.showName}
               </Link>
             ))}
           </section>
