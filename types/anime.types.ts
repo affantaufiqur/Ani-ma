@@ -1,3 +1,5 @@
+import { CharacterType } from './global.types'
+
 export type AnimeArrayDataType = {
   'data': AnimeDataType[]
   'pagination': {
@@ -304,4 +306,22 @@ export type AnimeByFullIdType = {
       },
     ]
   }
+}
+
+export type AnimeCharacterType = {
+  data: CharacterType[] & VoiceActor[]
+}
+
+type VoiceActor = {
+  'person': {
+    'mal_id': number
+    'url': string
+    'images': {
+      'jpg': {
+        'image_url': string
+      }
+    }
+    'name': string
+  }
+  'language': string
 }

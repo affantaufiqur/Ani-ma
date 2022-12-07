@@ -23,6 +23,7 @@ export default function Home() {
   const { data: TopPublishMangaData } = useQuery({
     queryKey: ['fetch top publishing manga'],
     queryFn: getTopPusblishingManga,
+    staleTime: 300000, // 5 minutes
   })
 
   return (

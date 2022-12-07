@@ -20,6 +20,7 @@ export default function Card({ item }: itemType) {
       href={`/${item?.genres[0]?.type}/${encodeURIComponent(item?.mal_id)}`}
       className="group flex shrink-0 basis-48 cursor-pointer flex-col gap-y-3"
       key={item.mal_id}
+      prefetch={false}
     >
       <Image
         src={item?.images?.webp?.image_url}
