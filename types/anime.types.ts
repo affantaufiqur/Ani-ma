@@ -1,4 +1,4 @@
-import { CharacterType } from './global.types'
+import type { CharacterType } from './global.types'
 
 export type AnimeArrayDataType = {
   'data': AnimeDataType[]
@@ -309,19 +309,21 @@ export type AnimeByFullIdType = {
 }
 
 export type AnimeCharacterType = {
-  data: CharacterType[] & VoiceActor[]
+  data: CharacterType[] & VoiceActorType
 }
 
-type VoiceActor = {
-  'person': {
-    'mal_id': number
-    'url': string
-    'images': {
-      'jpg': {
-        'image_url': string
+export type VoiceActorType = {
+  'voice_actors': {
+    'person': {
+      'mal_id': number
+      'url': string
+      'images': {
+        'jpg': {
+          'image_url': string
+        }
       }
+      'name': string
     }
-    'name': string
-  }
-  'language': string
+    'language': string
+  }[]
 }

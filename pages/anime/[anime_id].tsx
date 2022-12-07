@@ -4,7 +4,8 @@ import Head from 'next/head'
 import Image from 'next/image'
 import { ParsedUrlQuery } from 'querystring'
 import LoadingIndicator from '../../components/LoadingIndicator.component'
-import { AnimeByFullIdType } from '../../types/anime.types'
+import { AnimeByFullIdType, AnimeCharacterType, VoiceActorType } from '../../types/anime.types'
+import { CharacterType } from '../../types/global.types'
 import { getAnimeById, getAnimeCharacters } from '../../utils/getAnime.utils'
 
 export default function AnimePage({ params }: InferGetServerSidePropsType<typeof getServerSideProps>) {
@@ -14,7 +15,7 @@ export default function AnimePage({ params }: InferGetServerSidePropsType<typeof
     queryFn: () => getAnimeById(anime_id as string),
     cacheTime: 0,
   })
-  const { data: AnimeCharactersData } = useQuery({
+  const { data: AnimeCharactersData } = useQuery<AnimeCharacterType>({
     queryKey: ['fetch anime characters'],
     queryFn: () => getAnimeCharacters(anime_id as string),
     cacheTime: 0,
@@ -140,24 +141,30 @@ export default function AnimePage({ params }: InferGetServerSidePropsType<typeof
               </section>
               <section className="grid grid-cols-4 gap-8">
                 {AnimeCharactersData?.data.slice(0, 8).map((characters) => {
+                  const { character, favorites, role, voice_actors } = characters as unknown as CharacterType &
+                    VoiceActorType
                   return (
                     <div
-                      key={characters.character.mal_id}
+                      key={character.mal_id}
                       className="flex flex-row gap-4"
                     >
                       <Image
-                        src={characters.character.images.webp.image_url}
+                        src={character.images.webp.image_url}
                         width={80}
                         height={80}
-                        alt={characters.character.name}
+                        alt={character.name}
                         className="h-auto w-auto"
                       />
                       <div
                         id="character-info"
-                        className="flex flex-col gap-1"
+                        className="flex flex-col justify-between gap-1"
                       >
-                        <p className="text-white">{characters.character.name}</p>
-                        <p className="text-black-shaft-200">{characters.role}</p>
+                        <section>
+                          <p className="text-white">{character.name}</p>
+                          <p className="text-sm tracking-wide text-black-shaft-300">{role}</p>
+                          <p className="text-sm tracking-wide text-black-shaft-300">{favorites} Vote</p>
+                        </section>
+                        <p className="text-sm tracking-wide text-black-shaft-300">{voice_actors[0].person.name}</p>
                       </div>
                     </div>
                   )
