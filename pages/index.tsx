@@ -13,6 +13,7 @@ export default function Home() {
     queryKey: ['fetch anime season'],
     queryFn: getAnimeFromSeason,
     staleTime: 300000, // 5 minutes
+    cacheTime: 6000,
   })
 
   const { data: TopAiringAnimeData } = useQuery({

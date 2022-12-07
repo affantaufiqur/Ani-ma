@@ -1,7 +1,8 @@
-import { useQuery, QueryClient, dehydrate } from '@tanstack/react-query'
+import { useQuery, QueryClient, dehydrate, useIsFetching } from '@tanstack/react-query'
 import type { GetServerSideProps, GetServerSidePropsContext, InferGetServerSidePropsType } from 'next'
 import Head from 'next/head'
 import Image from 'next/image'
+import Link from 'next/link'
 import { ParsedUrlQuery } from 'querystring'
 import LoadingIndicator from '../../components/LoadingIndicator.component'
 import { AnimeByFullIdType, AnimeCharacterType, VoiceActorType } from '../../types/anime.types'
@@ -9,16 +10,21 @@ import { CharacterType } from '../../types/global.types'
 import { getAnimeById, getAnimeCharacters } from '../../utils/getAnime.utils'
 
 export default function AnimePage({ params }: InferGetServerSidePropsType<typeof getServerSideProps>) {
+  const isFetching = useIsFetching()
   const { anime_id } = params
-  const { data, status, error } = useQuery<AnimeByFullIdType, Error>({
+  const { data, status, error, isSuccess } = useQuery<AnimeByFullIdType, Error>({
     queryKey: ['fetch anime data'],
     queryFn: () => getAnimeById(anime_id as string),
     cacheTime: 0,
+    staleTime: 300000,
   })
-  const { data: AnimeCharactersData } = useQuery<AnimeCharacterType>({
+  const { data: AnimeCharactersData } = useQuery<AnimeCharacterType, Error>({
     queryKey: ['fetch anime characters'],
     queryFn: () => getAnimeCharacters(anime_id as string),
     cacheTime: 0,
+    staleTime: 30000,
+    retry: 2,
+    enabled: isSuccess,
   })
 
   if (status === 'loading') {
@@ -37,10 +43,18 @@ export default function AnimePage({ params }: InferGetServerSidePropsType<typeof
     )
   }
 
+  if (isFetching) {
+    return (
+      <div className="flex h-screen items-center justify-center bg-black-shaft-900">
+        <LoadingIndicator />
+      </div>
+    )
+  }
+
   return (
     <main>
       <Head>
-        <title>{data.data.titles[0].title} | Anima</title>
+        <title>{data?.data?.titles[0]?.title} | Anima</title>
         <meta
           name="description"
           content="Anime details"
@@ -50,7 +64,7 @@ export default function AnimePage({ params }: InferGetServerSidePropsType<typeof
           href="/favicon.ico"
         />
       </Head>
-      <main className="min-h-screen bg-black-shaft-900">
+      <main className="h-auto bg-black-shaft-900">
         <div className="container mx-auto font-general-sans">
           <section className="flex flex-row gap-5">
             <Image
@@ -112,19 +126,23 @@ export default function AnimePage({ params }: InferGetServerSidePropsType<typeof
                   </p>
                   <p>
                     <span>Episodes: </span>
-                    {data.data.episodes}
+                    {data.data.episodes === null ? '-' : data.data.episodes}
                   </p>
                   <p>
-                    <span>Year: </span> {data.data.year}
+                    <span>Duration: </span>
+                    {data.data.duration === null ? '-' : data.data.duration}
                   </p>
                   <p>
-                    <span>Season: </span> {data.data.season}
+                    <span>Year: </span> {data.data.year === null ? '-' : data.data.year}
+                  </p>
+                  <p>
+                    <span>Season: </span> {data.data.season === null ? '-' : data.data.season}
                   </p>
                   <p>
                     <span>Genre: </span> {data.data.genres[0].name}
                   </p>
                   <p>
-                    <span>Source: </span> {data.data.source}
+                    <span>Source: </span> {data.data.source === null ? '-' : data.data.source}
                   </p>
                 </div>
               </section>
@@ -140,35 +158,45 @@ export default function AnimePage({ params }: InferGetServerSidePropsType<typeof
                 <h1 className="text-xl tracking-wide text-black-shaft-200">Characters</h1>
               </section>
               <section className="grid grid-cols-4 gap-8">
-                {AnimeCharactersData?.data.slice(0, 8).map((characters) => {
-                  const { character, favorites, role, voice_actors } = characters as unknown as CharacterType &
-                    VoiceActorType
-                  return (
-                    <div
-                      key={character.mal_id}
-                      className="flex flex-row gap-4"
-                    >
-                      <Image
-                        src={character.images.webp.image_url}
-                        width={80}
-                        height={80}
-                        alt={character.name}
-                        className="h-auto w-auto"
-                      />
+                {AnimeCharactersData?.data
+                  ?.slice(0, 8)
+                  .sort((a, b): number => (a.favorites < b.favorites ? 1 : -1))
+                  .map((characters, index) => {
+                    const { character, favorites, role, voice_actors } = characters as unknown as CharacterType &
+                      VoiceActorType
+                    return (
                       <div
-                        id="character-info"
-                        className="flex flex-col justify-between gap-1"
+                        key={index}
+                        className="flex flex-row gap-4"
                       >
-                        <section>
-                          <p className="text-white">{character.name}</p>
-                          <p className="text-sm tracking-wide text-black-shaft-300">{role}</p>
-                          <p className="text-sm tracking-wide text-black-shaft-300">{favorites} Vote</p>
-                        </section>
-                        <p className="text-sm tracking-wide text-black-shaft-300">{voice_actors[0].person.name}</p>
+                        <Image
+                          src={character.images.webp.image_url}
+                          width={80}
+                          height={80}
+                          alt={character.name}
+                          className="h-auto w-auto rounded-sm "
+                        />
+                        <div
+                          id="character-info"
+                          className="flex flex-col justify-between gap-1 tracking-wide [&_p]:text-sm [&_p]:text-black-shaft-300"
+                        >
+                          <section>
+                            <h1 className=" text-white">{character.name}</h1>
+                            <p className=" text-black-shaft-300">{role}</p>
+                            <p className="text-black-shaft-300">{favorites.toLocaleString()} Vote</p>
+                          </section>
+                          <p className=" transition-all duration-150 hover:text-black-shaft-200">
+                            <Link
+                              href={`${voice_actors[0]?.person.url}`}
+                              target="_blank"
+                            >
+                              {voice_actors[0]?.person.name}
+                            </Link>
+                          </p>
+                        </div>
                       </div>
-                    </div>
-                  )
-                })}
+                    )
+                  })}
               </section>
             </section>
           </section>

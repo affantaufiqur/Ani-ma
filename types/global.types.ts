@@ -15,5 +15,5 @@ export type CharacterType = {
     'name': string
   }
   'role': string
-  'favorites': number | null
+  'favorites': number
 }

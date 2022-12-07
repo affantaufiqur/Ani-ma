@@ -309,7 +309,7 @@ export type AnimeByFullIdType = {
 }
 
 export type AnimeCharacterType = {
-  data: CharacterType[] & VoiceActorType
+  data: CharacterType[] & VoiceActorType[]
 }
 
 export type VoiceActorType = {
