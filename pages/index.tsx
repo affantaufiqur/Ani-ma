@@ -12,19 +12,21 @@ export default function Home() {
   const { data: SeasonalAnimeData } = useQuery({
     queryKey: ['fetch anime season'],
     queryFn: getAnimeFromSeason,
-    staleTime: 300000, // 5 minutes
-    cacheTime: 6000,
+    staleTime: 3600000, // 1 hour
+    cacheTime: 600000,
   })
 
   const { data: TopAiringAnimeData } = useQuery({
     queryKey: ['fetch top airing anime'],
     queryFn: getTopAiringAnime,
-    staleTime: 300000, // 5 minutes
+    staleTime: 3600000,
+    cacheTime: 600000,
   })
   const { data: TopPublishMangaData } = useQuery({
     queryKey: ['fetch top publishing manga'],
     queryFn: getTopPusblishingManga,
-    staleTime: 300000, // 5 minutes
+    staleTime: 3600000,
+    cacheTime: 600000,
   })
 
   return (

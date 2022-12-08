@@ -309,10 +309,40 @@ export type AnimeByFullIdType = {
 }
 
 export type AnimeCharacterType = {
-  data: CharacterType[] & VoiceActorType[]
+  'data': {
+    'character': {
+      'mal_id': number
+      'url': string
+      'images': {
+        'jpg': {
+          'image_url': string
+          'small_image_url': string
+        }
+        'webp': {
+          'image_url': string
+          'small_image_url': string
+        }
+      }
+      'name': string
+    }
+    'role': string
+    'favorites': number
+    'voice_actors': {
+      'person': {
+        'mal_id': number
+        'url': string
+        'images': {
+          'jpg': {
+            'image_url': string
+          }
+        }
+        'name': string
+      }
+      'language': string
+    }[]
+  }[]
 }
-
-export type VoiceActorType = {
+export interface VoiceActorType {
   'voice_actors': {
     'person': {
       'mal_id': number
@@ -325,5 +355,5 @@ export type VoiceActorType = {
       'name': string
     }
     'language': string
-  }[]
+  }
 }
