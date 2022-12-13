@@ -2,6 +2,7 @@ import { useQuery, QueryClient, dehydrate, useQueryClient } from '@tanstack/reac
 import type { GetServerSideProps, GetServerSidePropsContext, InferGetServerSidePropsType } from 'next'
 import Head from 'next/head'
 import Image from 'next/image'
+import Link from 'next/link'
 import { ParsedUrlQuery } from 'querystring'
 import Characters from '../../components/Details/characters.component'
 import InfoList from '../../components/Details/info-list.component'
@@ -104,7 +105,7 @@ export default function AnimePage({ params }: InferGetServerSidePropsType<typeof
           </section>
           <section className="mt-4 flex flex-row gap-5">
             <section
-              className="sticky flex basis-56 flex-col"
+              className="sticky flex basis-56 flex-col pb-12"
               id="anime-info-sidebar"
             >
               <Score data={data} />
@@ -113,6 +114,14 @@ export default function AnimePage({ params }: InferGetServerSidePropsType<typeof
                   <InfoList data={data} />
                 </div>
               </section>
+              <button className="rounded-md bg-port-gore-400 p-4 font-medium text-black-shaft-900 transition-all duration-200 hover:bg-port-gore-300">
+                <Link
+                  href={animeData.url}
+                  target="_blank"
+                >
+                  view in MAL
+                </Link>
+              </button>
             </section>
             {isFetching ? (
               <LoadingIndicator />
