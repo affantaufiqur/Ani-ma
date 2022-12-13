@@ -25,7 +25,7 @@ export default function Navbar({ children }: childrenProps) {
         <section className="container mx-auto flex flex-row items-center justify-between py-8 text-white">
           <Link
             href="/"
-            className="bg-gradient-to-r from-port-gore-400 via-port-gore-400 to-port-gore-800 bg-clip-text font-chillax text-2xl font-semibold tracking-wide text-transparent transition-all duration-100 hover:cursor-pointer hover:from-port-gore-500 hover:via-port-gore-600 hover:to-port-gore-900"
+            className="font-chillax text-2xl font-semibold tracking-wide text-port-gore-400 text-transparent transition-all duration-100 hover:cursor-pointer hover:text-port-gore-500"
           >
             Ani-ma
           </Link>

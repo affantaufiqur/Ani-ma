@@ -2,10 +2,12 @@ import { useQuery, QueryClient, dehydrate, useQueryClient } from '@tanstack/reac
 import type { GetServerSideProps, GetServerSidePropsContext, InferGetServerSidePropsType } from 'next'
 import Head from 'next/head'
 import Image from 'next/image'
-import Link from 'next/link'
 import { ParsedUrlQuery } from 'querystring'
+import Characters from '../../components/Details/characters.component'
 import InfoList from '../../components/Details/info-list.component'
 import Score from '../../components/Details/score.component'
+import Synopsis from '../../components/Details/synopsis.component'
+import Title from '../../components/Details/title.component'
 import LoadingIndicator from '../../components/LoadingIndicator.component'
 import { AnimeByFullIdType, AnimeCharacterType } from '../../types/anime.types'
 import { getAnimeById, getAnimeCharacters } from '../../utils/getAnime.utils'
@@ -13,6 +15,7 @@ import { getAnimeById, getAnimeCharacters } from '../../utils/getAnime.utils'
 export default function AnimePage({ params }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const queryClient = useQueryClient()
   const { anime_id } = params
+
   const { data, status, error } = useQuery<AnimeByFullIdType, Error>({
     queryKey: ['fetch anime data'],
     queryFn: () => getAnimeById(anime_id as string),
@@ -52,14 +55,20 @@ export default function AnimePage({ params }: InferGetServerSidePropsType<typeof
 
   // @ts-ignore
   if (data.status === '429') {
-    return <div className="flex h-screen items-center justify-center text-white">Too many requests</div>
-  }
-
-  function refetchData() {
-    queryClient.invalidateQueries({ queryKey: ['fetch anime characters'] })
+    queryClient.invalidateQueries({ queryKey: ['fetch anime data'] })
+    return (
+      <div className="flex h-screen flex-col items-center justify-center gap-2 text-white">
+        <p>Too many request</p>
+        <p>Due to limited API calls, please wait before reload the page</p>
+      </div>
+    )
   }
 
   const animeData = data.data
+  function refetchData(): void {
+    queryClient.invalidateQueries({ queryKey: ['fetch anime characters'] })
+  }
+
   return (
     <main>
       <Head>
@@ -86,25 +95,16 @@ export default function AnimePage({ params }: InferGetServerSidePropsType<typeof
             />
             <section className="max-w-3/4 flex flex-col gap-5">
               <section className="flex flex-col gap-5">
-                <section>
-                  <h1 className="text-2xl font-semibold tracking-wide text-white">{animeData?.titles[0].title}</h1>
-                  <h3 className="text-md font-normal text-black-shaft-400">
-                    {animeData?.titles.map((titleAlt, index) => {
-                      return <p key={index}>{titleAlt.type === 'Japanese' ? titleAlt.title : ''}</p>
-                    })}
-                  </h3>
-                </section>
+                <Title animeData={animeData} />
                 <section className="w-3/4">
-                  <p className="whitespace-normal break-words text-sm leading-loose tracking-wide text-black-shaft-100">
-                    {animeData?.synopsis}
-                  </p>
+                  <Synopsis animeData={animeData} />
                 </section>
               </section>
             </section>
           </section>
           <section className="mt-4 flex flex-row gap-5">
             <section
-              className="flex basis-56 flex-col"
+              className="sticky flex basis-56 flex-col"
               id="anime-info-sidebar"
             >
               <Score data={data} />
@@ -128,56 +128,10 @@ export default function AnimePage({ params }: InferGetServerSidePropsType<typeof
                   <h1 className="text-xl tracking-wide text-black-shaft-200">Characters</h1>
                 </section>
                 <section className="grid grid-cols-4 gap-8">
-                  {
-                    // @ts-ignore
-                    AnimeCharactersData?.status === '429' ? (
-                      <button
-                        className="text-white"
-                        onClick={refetchData}
-                      >
-                        too many request, reload here
-                      </button>
-                    ) : (
-                      AnimeCharactersData?.data
-                        ?.slice(0, 8)
-                        .sort((a, b): number => (a.favorites < b.favorites ? 1 : -1))
-                        .map((characters, index) => {
-                          const { character, favorites, role, voice_actors } = characters
-                          return (
-                            <div
-                              key={index}
-                              className="flex flex-row gap-4"
-                            >
-                              <Image
-                                src={character.images.webp.image_url}
-                                width={80}
-                                height={80}
-                                alt={character.name}
-                                className="h-auto w-auto rounded-sm "
-                              />
-                              <div
-                                id="character-info"
-                                className="flex flex-col justify-between gap-1 tracking-wide [&_p]:text-sm [&_p]:text-black-shaft-300"
-                              >
-                                <section>
-                                  <h1 className=" text-white">{character.name}</h1>
-                                  <p className=" text-black-shaft-300">{role}</p>
-                                  <p className="text-black-shaft-300">{favorites.toLocaleString()} Vote</p>
-                                </section>
-                                <p className=" transition-all duration-150 hover:text-black-shaft-200">
-                                  <Link
-                                    href={`${voice_actors[0]?.person.url}`}
-                                    target="_blank"
-                                  >
-                                    {voice_actors[0]?.person.name}
-                                  </Link>
-                                </p>
-                              </div>
-                            </div>
-                          )
-                        })
-                    )
-                  }
+                  <Characters
+                    AnimeCharactersData={AnimeCharactersData}
+                    refetchData={refetchData}
+                  />
                 </section>
               </section>
             )}

@@ -4,8 +4,7 @@ import {
   getAnimeSeasonNowUrl,
   topAiringAnimeTv,
 } from '../constant/animeUrl.constant'
-import { AnimeArrayDataType, AnimeByFullIdType, AnimeCharacterType } from '../types/anime.types'
-import { ErrorFetchingType } from '../types/global.types'
+import type { AnimeArrayDataType, AnimeByFullIdType, AnimeCharacterType } from '../types/anime.types'
 
 export const getAnimeFromSeason = async (): Promise<AnimeArrayDataType> => {
   const getAnimeFromSeasonReq = await fetch(getAnimeSeasonNowUrl)
