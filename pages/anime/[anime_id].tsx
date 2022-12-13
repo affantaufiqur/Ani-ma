@@ -6,31 +6,78 @@ import Link from 'next/link'
 import { ParsedUrlQuery } from 'querystring'
 import Characters from '../../components/Details/characters.component'
 import InfoList from '../../components/Details/info-list.component'
+import Relation from '../../components/Details/relation.component'
 import Score from '../../components/Details/score.component'
 import Synopsis from '../../components/Details/synopsis.component'
 import Title from '../../components/Details/title.component'
 import LoadingIndicator from '../../components/LoadingIndicator.component'
 import { AnimeByFullIdType, AnimeCharacterType } from '../../types/anime.types'
-import { getAnimeById, getAnimeCharacters } from '../../utils/getAnime.utils'
+import { RelatedType } from '../../types/global.types'
+import { getAnimeById, getAnimeCharacters, getAnimeRelations } from '../../utils/getAnime.utils'
+
+export const getServerSideProps: GetServerSideProps<{ params: ParsedUrlQuery }> = async (
+  context: GetServerSidePropsContext,
+) => {
+  const { anime_id } = context.query
+  const queryClient = new QueryClient()
+
+  await Promise.all([
+    queryClient.prefetchQuery({ queryKey: ['fetch anime data'], queryFn: () => getAnimeById(anime_id as string) }),
+    // queryClient.prefetchQuery({
+    //   queryKey: ['fetch anime characters'],
+    //   queryFn: () => getAnimeCharacters(anime_id as string),
+    // }),
+    // queryClient.prefetchQuery({
+    //   queryKey: ['fetch anime relations'],
+    //   queryFn: () => getAnimeRelations(anime_id as string),
+    // }),
+  ])
+
+  return {
+    props: {
+      params: context.query,
+      dehydrateState: dehydrate(queryClient),
+    },
+  }
+}
 
 export default function AnimePage({ params }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const queryClient = useQueryClient()
   const { anime_id } = params
 
-  const { data, status, error } = useQuery<AnimeByFullIdType, Error>({
+  const {
+    data,
+    status: animeDataStatus,
+    error,
+    isSuccess,
+  } = useQuery<AnimeByFullIdType, Error>({
     queryKey: ['fetch anime data'],
     queryFn: () => getAnimeById(anime_id as string),
     cacheTime: 3000,
     staleTime: 3000,
   })
-  const { data: AnimeCharactersData, isFetching } = useQuery<AnimeCharacterType, Error>({
+
+  const {
+    data: AnimeCharactersData,
+    isFetching,
+    isSuccess: isCharacterSuccess,
+  } = useQuery<AnimeCharacterType, Error>({
     queryKey: ['fetch anime characters'],
     queryFn: () => getAnimeCharacters(anime_id as string),
     cacheTime: 3000,
     staleTime: 3000,
+    enabled: isSuccess,
   })
 
-  if (status === 'loading') {
+  const { data: relatedAnimeData, isFetching: isRelationFetching } = useQuery<RelatedType, Error>({
+    queryKey: ['fetch anime relations'],
+    queryFn: () => getAnimeRelations(anime_id as string),
+    cacheTime: 3000,
+    staleTime: 3000,
+    enabled: isSuccess && isCharacterSuccess,
+  })
+
+  if (animeDataStatus === 'loading') {
     return (
       <div className="flex h-screen items-center justify-center bg-black-shaft-900">
         <LoadingIndicator />
@@ -38,18 +85,10 @@ export default function AnimePage({ params }: InferGetServerSidePropsType<typeof
     )
   }
 
-  if (status === 'error') {
+  if (animeDataStatus === 'error') {
     return (
       <div className="flex h-screen items-center justify-center bg-black-shaft-900">
         <p className="text-white">Error: {error.message}</p>
-      </div>
-    )
-  }
-
-  if (isFetching) {
-    return (
-      <div className="flex h-screen items-center justify-center bg-black-shaft-900">
-        <LoadingIndicator />
       </div>
     )
   }
@@ -66,9 +105,6 @@ export default function AnimePage({ params }: InferGetServerSidePropsType<typeof
   }
 
   const animeData = data.data
-  function refetchData(): void {
-    queryClient.invalidateQueries({ queryKey: ['fetch anime characters'] })
-  }
 
   return (
     <main>
@@ -114,59 +150,45 @@ export default function AnimePage({ params }: InferGetServerSidePropsType<typeof
                   <InfoList data={data} />
                 </div>
               </section>
-              <button className="rounded-md bg-port-gore-400 p-4 font-medium text-black-shaft-900 transition-all duration-200 hover:bg-port-gore-300">
-                <Link
-                  href={animeData.url}
-                  target="_blank"
-                >
-                  view in MAL
-                </Link>
-              </button>
-            </section>
-            {isFetching ? (
-              <LoadingIndicator />
-            ) : (
-              <section
-                id="anime-info-content"
-                className=""
+              <Link
+                href={animeData.url}
+                target="_blank"
+                className="rounded-md bg-port-gore-400 p-4 text-center font-medium text-black-shaft-900 transition-all duration-200 hover:bg-port-gore-300"
               >
-                <section
-                  id="anime-characters"
-                  className="mb-4"
-                >
-                  <h1 className="text-xl tracking-wide text-black-shaft-200">Characters</h1>
-                </section>
-                <section className="grid grid-cols-4 gap-8">
-                  <Characters
-                    AnimeCharactersData={AnimeCharactersData}
-                    refetchData={refetchData}
-                  />
-                </section>
+                View in MAL
+              </Link>
+            </section>
+            <section
+              id="anime-info-content"
+              className=""
+            >
+              <section
+                id="anime-characters"
+                className="mb-4"
+              >
+                <h1 className="text-xl tracking-wide text-black-shaft-200">Characters</h1>
               </section>
-            )}
+              {isFetching ? (
+                <LoadingIndicator />
+              ) : (
+                <section className="grid grid-cols-4 gap-8">
+                  <Characters AnimeCharactersData={AnimeCharactersData} />
+                </section>
+              )}
+              <section className="mt-4">
+                {isRelationFetching ? (
+                  <LoadingIndicator />
+                ) : (
+                  <Relation
+                    fetching={isRelationFetching}
+                    relatedAnimeData={relatedAnimeData}
+                  />
+                )}
+              </section>
+            </section>
           </section>
         </div>
       </main>
     </main>
   )
-}
-
-export const getServerSideProps: GetServerSideProps<{ params: ParsedUrlQuery }> = async (
-  context: GetServerSidePropsContext,
-) => {
-  const { anime_id } = context.query
-  const queryClient = new QueryClient()
-
-  await queryClient.prefetchQuery({ queryKey: ['fetch anime data'], queryFn: () => getAnimeById(anime_id as string) })
-  await queryClient.prefetchQuery({
-    queryKey: ['fetch anime characters'],
-    queryFn: () => getAnimeCharacters(anime_id as string),
-  })
-
-  return {
-    props: {
-      params: context.query,
-      dehydrateState: dehydrate(queryClient),
-    },
-  }
 }

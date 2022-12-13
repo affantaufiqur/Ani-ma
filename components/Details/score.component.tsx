@@ -19,7 +19,7 @@ export default function Score({ data }: ScoreType) {
         <div className="flex flex-col items-center justify-center gap-y-3 p-8">
           <h6>Score:</h6>
           <h1 className="text-4xl font-semibold">{score?.toFixed(1)}</h1>
-          <h6>{scored_by} voted</h6>
+          <h6>{scored_by?.toLocaleString()} voted</h6>
         </div>
       </section>
     </>

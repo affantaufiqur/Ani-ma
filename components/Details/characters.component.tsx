@@ -1,22 +1,29 @@
+import { useQueryClient } from '@tanstack/react-query'
 import Image from 'next/image'
 import Link from 'next/link'
 import type { AnimeCharacterType } from '../../types/anime.types'
+import Button from '../UI/button.component'
+
 type CharacterType = {
   AnimeCharactersData: AnimeCharacterType | undefined
-  refetchData?: () => void
 }
-export default function Characters({ AnimeCharactersData, refetchData }: CharacterType) {
+
+export default function Characters({ AnimeCharactersData }: CharacterType) {
+  const queryClient = useQueryClient()
+  function refetchData(): void {
+    queryClient.invalidateQueries({ queryKey: ['fetch anime characters'] })
+  }
+
   return (
     <>
       {
         // @ts-ignore
         AnimeCharactersData?.status === '429' ? (
-          <button
-            className="text-white"
-            onClick={refetchData}
-          >
-            too many request, reload here
-          </button>
+          <Button
+            button_type="rounded-md bg-black-shaft-800/40 px-4 py-1 text-white transition-all duration-200 hover:bg-black-shaft-800/60"
+            button_text="too many requests, click here to reload"
+            handleClick={refetchData}
+          />
         ) : (
           AnimeCharactersData?.data
             ?.slice(0, 8)

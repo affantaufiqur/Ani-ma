@@ -3,3 +3,4 @@ export const topAiringAnimeTv = 'https://api.jikan.moe/v4/top/anime?filter=airin
 export const topPublishingManga = 'https://api.jikan.moe/v4/top/manga?filter=publishing&limit=10'
 export const getAnimeByFullId = (id: string) => `https://api.jikan.moe/v4/anime/${id}/full`
 export const getAnimeCharactersUrl = (id: string) => `https://api.jikan.moe/v4/anime/${id}/characters`
+export const getAnimeRelationsUrl = (id: string) => `https://api.jikan.moe/v4/anime/${id}/relations`

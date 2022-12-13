@@ -24,3 +24,19 @@ export type ErrorFetchingType = {
   message?: string
   error?: null | string | undefined
 }
+
+export type RelatedType = {
+  'data': [
+    {
+      'relation': string
+      'entry': [
+        {
+          'mal_id': number
+          'type': string
+          'name': string
+          'url': string
+        },
+      ]
+    },
+  ]
+}
